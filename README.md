@@ -1,29 +1,17 @@
-# vue-project
+# vueExcel表格
+实现了Excel基础功能，比如表格选中、样式修改、增删行列、基础公式等
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+### 安装依赖
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### 启动
 
 ```sh
 npm run dev
 ```
+### 预览
 
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+![alt text](image.png)

@@ -1,5 +1,8 @@
 <template>
   <div class="main">
+    <el-button type="primary" @click="console.log(allTds)">
+      打印数据
+    </el-button>
     <ul class="one">
       <li class="shear" @click="shear" title="剪切"><i class="icon iconfont icon-msnui-cut-file"></i></li>
       <li class="copy" @click="copy" title="复制"><i class="icon iconfont icon-fuzhi_fuzhi"></i></li>
