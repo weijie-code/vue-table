@@ -2,14 +2,22 @@ export default {
   "alltds": [
     [
       {
+        // 单元格的值
         "value": 1,
+        // 单元格的类名,
         "class": {
+          // 是否是合并
           "area": false,
+          // 是否可以单击
           "isClick": false,
+          // 是否可以双击
           "isDbClick": true,
+          // 是否选中
           "isActive": false,
+          // 是否是左侧单元格
           "leftTd": true
         },
+        // 单元格的类型
         "ownType": {
           "isData": false,
           "isSelect": false,
@@ -25,12 +33,16 @@ export default {
           "moreData": [],
           "selectData": []
         },
+        // 单元格合并的信息
         "ownMerge": {
           "isShow": true,
           "colspan": "1",
           "rowspan": "1"
         },
-        "ownStyle": {}, "ownFun": ""
+        // 单元格自己的样式
+        "ownStyle": {}, 
+        // 单元格自己的函数
+        "ownFun": ""
       },
       {
         "value": 2,

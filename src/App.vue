@@ -1,5 +1,5 @@
 <template>
-  <div class="big">
+  <div class="main">
     <ul class="one">
       <li class="shear" @click="shear" title="剪切"><i class="icon iconfont icon-msnui-cut-file"></i></li>
       <li class="copy" @click="copy" title="复制"><i class="icon iconfont icon-fuzhi_fuzhi"></i></li>
@@ -35,8 +35,6 @@
         </ul>
       </li>
       <li class="bor" style="width: 1px">|</li>
-      <li title="任务发布"><i class="icon iconfont icon-faburenwu"></i></li>
-      <li title="任务预览"><i class="icon iconfont icon-bofang"></i></li>
       <li class="containLi" @click.stop="containLi('small_ul_three')" title="控件类型" style="width: 50px">
         <span><i class="icon iconfont icon-kongjian"></i></span>
         <span>
@@ -47,23 +45,10 @@
           <li @click.stop="isSelect" class="isSelect"><i class="icon iconfont icon-duoxuanxialakuang"></i>下拉控件</li>
           <li @click.stop="isOne" class="isOne"><i class="icon iconfont icon-danxuananniu"></i>单选控件</li>
           <li @click.stop="isMore" class="isMore"><i class="icon iconfont icon-fuxuan"></i>复选控件</li>
-          <li @click.stop="isImg" class="isImg"><i class="icon iconfont icon-tupian"></i>图片控件</li>
         </ul>
-      </li>
-      <!-- <li class="isFile" title="上传文件"><i class="icon iconfont icon-shangchuan"></i></li> -->
-      <li style="width:50px">
-        <Upload style="height:100%;border:none" size="small" action="../">
-          <Button style="height:100%;border:none" size="large" type="ghost" icon="ios-cloud-upload-outline">
-          </Button>
-        </Upload>
       </li>
     </ul>
     <ul class="two">
-      <li @click="new_fixed" class="new_fixed" title="新增固定数据项"><i class="icon iconfont icon-biaoge "></i></li>
-      <li @click="new_detail" class="new_detail" title="新增明细数据项"><i style="font-size: 20px" class="icon iconfont icon-biaoge1 "></i></li>
-      <li @click="modelShow=true" title="编辑数据项" class="seeData"><i class="icon iconfont icon-biaoge2"></i></li>
-      <li title="删除数据项" class="delData"><i class="icon iconfont icon-shujuguanli_kuozhan_shanchu"></i></li>
-      <li class="bor" style="width: 1px">|</li>
       <li style="width: 100px">
         <i class="icon iconfont"></i>
         <select class="typeFont" @change="typeFont" name="" id="">
@@ -125,156 +110,23 @@
           <li @click.stop="noneBorder" class="noneBorder"><i class="icon iconfont icon-wubiankuang"></i>无边框</li>
         </ul>
       </li>
-      <li class="wordWrapBtn" @click="wordWrapBtn" title="自动换行"><i class="icon iconfont icon-zidonghuanxing"></i></li>
       <!-- <li title="文字方向"><i class="icon iconfont icon-wenzifangxiang"></i></li> -->
       <li style="margin-top:0px;" class="choiceColor" title="单元格背景色">
         <!-- <i class="icon iconfont icon-beijingse cp1"></i> -->
-        <ColorPicker @on-change="changeBackgroundColor" size="small" v-model="backgroundColor" recommend />
+        <el-color-picker @change="changeBackgroundColor" size="small" v-model="backgroundColor" recommend />
       </li>
       <li style="margin-top:0px;margin-left:20px;" class="choiceColor isFont" title="字体颜色">
         <!-- <i class="icon iconfont icon-wenzibeijingse cp2"></i> -->
-        <ColorPicker @on-change="changeColor" size="small" v-model="Color" recommend />
+        <el-color-picker @change="changeColor" size="small" v-model="Color" recommend />
       </li>
     </ul>
     <!-- 公式 -->
     <div class="div" v-show="inputDiv" style="textAlign:left">
-      <Input class="addFunInput" v-model="ruleMsg" placeholder="请输入合法公式" style="width: 300px"></Input>
-      <Button size="small" @click="sureAddFun" type="info">确认</Button>
-      <Button size="small" @click="noSureAdd" type="warning">取消</Button>
-      <Button size="small" type="error" @click="delFun">删除</Button>
+      <el-input class="addFunInput" v-model="ruleMsg" placeholder="请输入合法公式" style="width: 300px"></el-input>
+      <el-button size="small" @click="sureAddFun" type="info">确认</el-button>
+      <el-button size="small" @click="noSureAdd" type="warning">取消</el-button>
+      <el-button size="small" type="danger" @click="delFun">删除</el-button>
     </div>
-    <!-- 查看明细表 -->
-    <div v-show="modelShow" class="seeDataItem">
-      <div class="top">{{seeDataItemTop}}</div>
-      <div v-show="!tabNoActive" class="con gudingCon">
-        <span @click="tabNoActive=false" :class="{tabnoActive:tabNoActive}" class="tab1 alltab">固定数据表</span>
-        <span @click="tabNoActive=true" :class="{tabnoActive:!tabNoActive}" class="tab2 alltab">明细数据表</span>
-        <div class="kubiaoName">
-          <span>库表名称</span><Input size="small" placeholder="" style="width: 100px"></Input>
-        </div>
-        <Row type="flex" justify="start" class="kubiaoHead">
-          <Col span="3">字段名称</Col>
-          <Col span="3">数据类型</Col>
-          <Col span="3">字段长度</Col>
-          <Col span="3">是否唯一</Col>
-          <Col span="3">是否为空</Col>
-          <Col span="3">绑定条件</Col>
-          <Col span="3">绑定数据</Col>
-          <Col span="3">坐标</Col>
-        </Row>
-        <div class="kubiaoCon">
-          <div v-for="(item,index) in gudingData" :key="index">
-            <Row type="flex" justify="start" :gutter="16" class="kubiaoHead">
-              <Col span="3">
-              <Input v-model="item.name" size="small" placeholder=""></Input>
-              </Col>
-              <Col span="3">
-              <Select @on-change="gudingTypeChange(index)" v-model="item.type" size="small">
-                <Option value="number" key="数值">数值</Option>
-                <Option value="str" key="字符">字符</Option>
-                <Option value="date" key="日期">日期</Option>
-              </Select>
-              </Col>
-              <Col span="3">
-              <Input :disabled="item.isEdit" v-model="item.thelength" size="small" placeholder="" style="width: 60px"></Input>
-              </Col>
-              <Col span="3">
-              <Checkbox v-model="item.isonlyOne"></Checkbox>
-              </Col>
-              <Col span="3">
-              <Checkbox v-model="item.isEmpty"></Checkbox>
-              </Col>
-              <Col span="3">
-              <Select v-model="item.term" size="small">
-                <Option value="0" key="0">无</Option>
-                <Option value="1" key="1">日期控件</Option>
-                <Option value="2" key="2">下拉控件</Option>
-                <Option value="3" key="3">单选控件</Option>
-                <Option value="4" key="4">复选控件</Option>
-                <Option value="5" key="5">图片控件</Option>
-                <Option value="6" key="6">文本控件</Option>
-              </Select>
-              </Col>
-              <Col span="3">
-              <Select v-model="item.binding" filterable size="small">
-                <Option v-for="item1 in item.bindingData" :value="item1.value" :key="item1.value">{{ item1.label }}</Option>
-              </Select>
-              </Col>
-              <Col span="3">{{item.coordinate}}</Col>
-            </Row>
-          </div>
-        </div>
-        <div class="kubiaoBottom">
-          <Button @click="aa" style="marginRight:10px;" type="info">确认</Button>
-          <Button @click="modelShow = false" type="warning">取消</Button>
-        </div>
-      </div>
-      <div v-show="tabNoActive" class="con mingxiCon">
-        <span @click="tabNoActive=false" :class="{tabnoActive:tabNoActive}" class="tab1 alltab">固定数据表</span>
-        <span @click="tabNoActive=true" :class="{tabnoActive:!tabNoActive}" class="tab2 alltab">明细数据表</span>
-        <div class="kubiaoName">
-          <span>库表名称</span><Input size="small" placeholder="" style="width: 100px"></Input>
-        </div>
-        <Row type="flex" justify="start" class="kubiaoHead">
-          <Col span="3">字段名称</Col>
-          <Col span="3">数据类型</Col>
-          <Col span="3">字段长度</Col>
-          <Col span="3">是否唯一</Col>
-          <Col span="3">是否为空</Col>
-          <Col span="3">绑定条件</Col>
-          <Col span="3">绑定数据</Col>
-          <Col span="3">坐标</Col>
-        </Row>
-        <div class="kubiaoCon">
-          <div v-for="(item,index) in mingxiData" :key="index">
-            <Row type="flex" justify="start" :gutter="16" class="kubiaoHead">
-              <Col span="3">
-              <Input v-model="item.name" size="small" placeholder=""></Input>
-              </Col>
-              <Col span="3">
-              <Select @on-change="mingxiTypeChange(index)" v-model="item.type" size="small">
-                <Option value="number" key="数值">数值</Option>
-                <Option value="str" key="字符">字符</Option>
-                <Option value="date" key="日期">日期</Option>
-              </Select>
-              </Col>
-              <Col span="3">
-              <Input :disabled="item.isEdit" v-model="item.thelength" size="small" placeholder="" style="width: 60px"></Input>
-              </Col>
-              <Col span="3">
-              <Checkbox v-model="item.isonlyOne"></Checkbox>
-              </Col>
-              <Col span="3">
-              <Checkbox v-model="item.isEmpty"></Checkbox>
-              </Col>
-              <Col span="3">
-              <Select v-model="item.term" size="small">
-                <Option value="0" key="0">无</Option>
-                <Option value="1" key="1">日期控件</Option>
-                <Option value="2" key="2">下拉控件</Option>
-                <Option value="3" key="3">单选控件</Option>
-                <Option value="4" key="4">复选控件</Option>
-                <Option value="5" key="5">图片控件</Option>
-                <Option value="6" key="6">文本控件</Option>
-              </Select>
-              </Col>
-              <Col span="3">
-              <Select v-model="item.binding" filterable size="small">
-                <Option v-for="item1 in item.bindingData" :value="item1.value" :key="item1.value">{{ item1.label }}</Option>
-              </Select>
-              </Col>
-              <Col span="3">{{item.coordinate}}</Col>
-            </Row>
-          </div>
-        </div>
-        <div class="kubiaoBottom">
-          <Button style="marginRight:10px;" type="info">确认</Button>
-          <Button @click="modelShow = false" type="warning">取消</Button>
-        </div>
-      </div>
-
-    </div>
-    <div v-show="modelShow" class="model"></div>
     <!-- 表格 -->
     <div class="hello">
       <div v-show='activeDiv' :style=leftStyle style="width:0;" class="leftDiv all"></div>
@@ -297,16 +149,16 @@
           <tr v-for="(item,index) in allTds" :key="index">
             <td @click.stop="dj" @dblclick="sj" v-for="(tds,tdIndex) in item" :key="tdIndex" @blur="noEditor" @mousedown="mdown" @mouseover="mover" @mouseout="mout" @mouseup="mup" v-show="tds.ownMerge.isShow" :fromTr="index" :fromTd="tdIndex" :class="tds.class" :style="tds.ownStyle" :id="tds.newId" :rowspan="tds.ownMerge.rowspan" :colspan="tds.ownMerge.colspan">
               {{tds.value}}
-              <DatePicker v-model="tds.ownType.dataModel" v-if="tds.ownType.isData" type="date" value="yyyy-MM-dd" format="yyyy年MM月dd日" placeholder="Select date" style="width:100%" size="small"></DatePicker>
-              <Select size="small" v-if="tds.ownType.isSelect" v-model="tds.ownType.selectModel" style="width:100%">
-                <Option v-for="item in tds.ownType.selectData" :value="item" :key="item">{{ item }}</Option>
-              </Select>
-              <RadioGroup size="small" v-if="tds.ownType.isOne" v-model="tds.ownType.oneModel">
-                <Radio v-for="(item,index) in tds.ownType.oneData" :label="item" :key="index"></Radio>
-              </RadioGroup>
-              <CheckboxGroup size="small" v-if="tds.ownType.isMore" v-model="tds.ownType.moreModel">
-                <Checkbox v-for="(item,index) in tds.ownType.moreData" :label="item" :key="index"></Checkbox>
-              </CheckboxGroup>
+              <el-date-picker v-model="tds.ownType.dataModel" v-if="tds.ownType.isData" type="date" value="yyyy-MM-dd" format="yyyy年MM月dd日" placeholder="Select date" style="width:100%" size="small"></el-date-picker>
+              <el-select size="small" v-if="tds.ownType.isSelect" v-model="tds.ownType.selectModel" style="width:100%">
+                <el-option v-for="item in tds.ownType.selectData" :value="item" :key="item">{{ item }}</el-option>
+              </el-select>
+              <el-radio-group size="small" v-if="tds.ownType.isOne" v-model="tds.ownType.oneModel">
+                <el-radio v-for="(item,index) in tds.ownType.oneData" :label="item" :key="index"></el-radio>
+              </el-radio-group>
+              <el-radio-group size="small" v-if="tds.ownType.isMore" v-model="tds.ownType.moreModel">
+                <el-radio v-for="(item,index) in tds.ownType.moreData" :label="item" :key="index"></el-radio>
+              </el-radio-group>
             </td>
           </tr>
         </tbody>
@@ -381,7 +233,6 @@ export default {
       color1: '',
       seeDataItemTop: "编辑数据项",
       tabNoActive: false,
-      modelShow: false,
       gudingData: [],
       mingxiData: [],
       allGudingId: [],
@@ -406,7 +257,7 @@ export default {
       //全局字母按键事件
       document.addEventListener('keyup', function (e) {
         var oEvent = window.event.keyCode;
-        //ctrl放开
+        // ctrl放开
         if (oEvent == 17) {
           _this.isCtrl = false;
         }
@@ -551,6 +402,9 @@ export default {
     // }
   },
   methods: {
+    setKey(obj, key, value) {
+      obj[key] = value;
+    },
     allTdSort (a) {
       //头部td
       for (var j = 1, length2 = this.headTd.length; j < length2; j++) {
@@ -578,7 +432,7 @@ export default {
           if (!this.isAddFun) {
             //判断是否是ctrl多选
             if (this.isCtrl) {
-              Vue.set(this.allTds[one][two].class, 'ctrlActive', true);
+              this.setKey(this.allTds[one][two].class, 'ctrlActive', true);
               // this.allTds[one][two].class.ctrlActive = true;
             } else {
               //设置选中样式
@@ -1295,9 +1149,6 @@ export default {
       this.small_ul_four = false;
       this.changeStyle(a.target.getAttribute('_name'), a.target.getAttribute('value'));
     },
-    wordWrapBtn () {
-      this.changeStyle('word-wrap', 'break-word');
-    },
     choiceColor () {
       document.querySelector('.color div').click();
     },
@@ -1307,17 +1158,17 @@ export default {
       if (actieTd) {
         var one = actieTd.getAttribute('fromtr');
         var two = actieTd.getAttribute('fromtd');
-        Vue.set(this.allTds[one][two].ownStyle, 'border', '1px solid black');
-        Vue.set(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid black');
-        Vue.set(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid black');
+        this.setKey(this.allTds[one][two].ownStyle, 'border', '1px solid black');
+        this.setKey(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid black');
+        this.setKey(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid black');
         actieTd.click();
       } else if (areaTd[0]) {
         for (var k = 0, length3 = areaTd.length; k < length3; k++) {
           var one = areaTd[k].getAttribute('fromtr');
           var two = areaTd[k].getAttribute('fromtd');
-          Vue.set(this.allTds[one][two].ownStyle, 'border', '1px solid black');
-          Vue.set(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid black');
-          Vue.set(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid black');
+          this.setKey(this.allTds[one][two].ownStyle, 'border', '1px solid black');
+          this.setKey(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid black');
+          this.setKey(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid black');
         }
       }
     },
@@ -1327,13 +1178,13 @@ export default {
       if (actieTd) {
         var one = actieTd.getAttribute('fromtr');
         var two = actieTd.getAttribute('fromtd');
-        Vue.set(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid black');
+        this.setKey(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid black');
         actieTd.click();
       } else if (areaTd[0]) {
         for (var k = 0, length3 = areaTd.length; k < length3; k++) {
           var one = areaTd[k].getAttribute('fromtr');
           var two = areaTd[k].getAttribute('fromtd');
-          Vue.set(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid black');
+          this.setKey(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid black');
         }
       }
     },
@@ -1343,13 +1194,13 @@ export default {
       if (actieTd) {
         var one = actieTd.getAttribute('fromtr');
         var two = actieTd.getAttribute('fromtd');
-        Vue.set(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid black');
+        this.setKey(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid black');
         actieTd.click();
       } else if (areaTd[0]) {
         for (var k = 0, length3 = areaTd.length; k < length3; k++) {
           var one = areaTd[k].getAttribute('fromtr');
           var two = areaTd[k].getAttribute('fromtd');
-          Vue.set(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid black');
+          this.setKey(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid black');
         }
       }
     },
@@ -1359,13 +1210,13 @@ export default {
       if (actieTd) {
         var one = actieTd.getAttribute('fromtr');
         var two = actieTd.getAttribute('fromtd');
-        Vue.set(this.allTds[one][two].ownStyle, 'borderRight', '1px solid black');
+        this.setKey(this.allTds[one][two].ownStyle, 'borderRight', '1px solid black');
         actieTd.click();
       } else if (areaTd[0]) {
         for (var k = 0, length3 = areaTd.length; k < length3; k++) {
           var one = areaTd[k].getAttribute('fromtr');
           var two = areaTd[k].getAttribute('fromtd');
-          Vue.set(this.allTds[one][two].ownStyle, 'borderRight', '1px solid black');
+          this.setKey(this.allTds[one][two].ownStyle, 'borderRight', '1px solid black');
         }
       }
     },
@@ -1375,13 +1226,13 @@ export default {
       if (actieTd) {
         var one = actieTd.getAttribute('fromtr');
         var two = actieTd.getAttribute('fromtd');
-        Vue.set(this.allTds[one][two].ownStyle, 'borderBottom', '1px solid black');
+        this.setKey(this.allTds[one][two].ownStyle, 'borderBottom', '1px solid black');
         actieTd.click();
       } else if (areaTd[0]) {
         for (var k = 0, length3 = areaTd.length; k < length3; k++) {
           var one = areaTd[k].getAttribute('fromtr');
           var two = areaTd[k].getAttribute('fromtd');
-          Vue.set(this.allTds[one][two].ownStyle, 'borderBottom', '1px solid black');
+          this.setKey(this.allTds[one][two].ownStyle, 'borderBottom', '1px solid black');
         }
       }
     },
@@ -1391,17 +1242,17 @@ export default {
       if (actieTd) {
         var one = actieTd.getAttribute('fromtr');
         var two = actieTd.getAttribute('fromtd');
-        Vue.set(this.allTds[one][two].ownStyle, 'border', '1px solid #ccc');
-        Vue.set(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid #ccc');
-        Vue.set(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid #ccc');
+        this.setKey(this.allTds[one][two].ownStyle, 'border', '1px solid #ccc');
+        this.setKey(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid #ccc');
+        this.setKey(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid #ccc');
         actieTd.click();
       } else if (areaTd[0]) {
         for (var k = 0, length3 = areaTd.length; k < length3; k++) {
           var one = areaTd[k].getAttribute('fromtr');
           var two = areaTd[k].getAttribute('fromtd');
-          Vue.set(this.allTds[one][two].ownStyle, 'border', '1px solid #ccc');
-          Vue.set(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid #ccc');
-          Vue.set(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid #ccc');
+          this.setKey(this.allTds[one][two].ownStyle, 'border', '1px solid #ccc');
+          this.setKey(this.allTds[one - 1][two].ownStyle, 'borderBottom', '1px solid #ccc');
+          this.setKey(this.allTds[one][two - 1].ownStyle, 'borderRight', '1px solid #ccc');
         }
       }
     },
@@ -1437,13 +1288,13 @@ export default {
       if (actieTd) {
         var one = actieTd.getAttribute('fromtr');
         var two = actieTd.getAttribute('fromtd');
-        Vue.set(this.allTds[one][two].ownStyle, key, value);
+        this.setKey(this.allTds[one][two].ownStyle, key, value);
         actieTd.click();
       } else if (areaTd[0]) {
         for (var k = 0, length3 = areaTd.length; k < length3; k++) {
           var one = areaTd[k].getAttribute('fromtr');
           var two = areaTd[k].getAttribute('fromtd');
-          Vue.set(this.allTds[one][two].ownStyle, key, value);
+          this.setKey(this.allTds[one][two].ownStyle, key, value);
         }
       }
     },
@@ -1454,13 +1305,13 @@ export default {
         var one = actieTd.getAttribute('fromtr');
         var two = actieTd.getAttribute('fromtd');
         this.allTds[one][two].value = "";
-        Vue.set(this.allTds[one][two].ownType, key, value);
+        this.setKey(this.allTds[one][two].ownType, key, value);
         actieTd.click();
       } else if (areaTd[0]) {
         for (var k = 0, length3 = areaTd.length; k < length3; k++) {
           var one = areaTd[k].getAttribute('fromtr');
           var two = areaTd[k].getAttribute('fromtd');
-          Vue.set(this.allTds[one][two].ownType, key, value);
+          this.setKey(this.allTds[one][two].ownType, key, value);
           this.allTds[one][two].value = "";
         }
       }
@@ -1484,273 +1335,6 @@ export default {
         this.mingxiData[a].isEdit = true;
       }
     },
-    new_fixed () {
-      //固定数据项
-      var _this = this;
-      var ctrlTd = document.querySelectorAll('.ctrlActive');
-      var actieTd = document.querySelector('.isActive');
-      var areaTd = document.querySelectorAll('.area');
-      if (actieTd) {
-        var one = actieTd.getAttribute('fromtr');
-        var two = actieTd.getAttribute('fromtd');
-        var _id = actieTd.getAttribute('id');
-        Vue.set(this.allTds[one][two].class, 'postil', true);
-        var obj = {
-          name: _id,
-          type: "",
-          thelength: '',
-          isonlyOne: false,
-          isEmpty: false,
-          term: "0",
-          binding: 0,
-          isEdit: false,
-          bindingData: [
-            {
-              label: '无',
-              value: 0
-            },
-            {
-              label: 'a',
-              value: 1
-            },
-            {
-              label: 'b',
-              value: 2
-            },
-            {
-              label: 'c',
-              value: 3
-            },
-            {
-              label: 'd',
-              value: 4
-            },
-          ],
-          coordinate: _id
-        };
-        this.gudingData.push(obj);
-        this.allGudingId.push(_id);
-      } else if (areaTd[0]) {
-        for (var k = 0, length3 = areaTd.length; k < length3; k++) {
-          var one = areaTd[k].getAttribute('fromtr');
-          var two = areaTd[k].getAttribute('fromtd');
-          var _id = areaTd[k].getAttribute('id');
-          Vue.set(_this.allTds[one][two].class, 'postil', true);
-          var obj = {
-            name: _id,
-            type: "",
-            thelength: '',
-            isonlyOne: false,
-            isEmpty: false,
-            isEdit: false,
-            term: "0",
-            binding: 0,
-            bindingData: [
-              {
-                label: '无',
-                value: 0
-              },
-              {
-                label: 'a',
-                value: 1
-              },
-              {
-                label: 'b',
-                value: 2
-              },
-              {
-                label: 'c',
-                value: 3
-              },
-              {
-                label: 'd',
-                value: 4
-              },
-            ],
-            coordinate: _id
-          };
-          this.gudingData.push(obj);
-          this.allGudingId.push(_id);
-        }
-      } else if (ctrlTd[0]) {
-        for (var k = 0, length3 = ctrlTd.length; k < length3; k++) {
-          var one = ctrlTd[k].getAttribute('fromtr');
-          var two = ctrlTd[k].getAttribute('fromtd');
-          var _id = ctrlTd[k].getAttribute('id');
-          Vue.set(_this.allTds[one][two].class, 'postil', true);
-          var obj = {
-            name: _id,
-            type: "",
-            thelength: '',
-            isonlyOne: false,
-            isEmpty: false,
-            term: "0",
-            binding: 0,
-            isEdit: false,
-            bindingData: [
-              {
-                label: '无',
-                value: 0
-              },
-              {
-                label: 'a',
-                value: 1
-              },
-              {
-                label: 'b',
-                value: 2
-              },
-              {
-                label: 'c',
-                value: 3
-              },
-              {
-                label: 'd',
-                value: 4
-              },
-            ],
-            coordinate: _id
-          };
-          this.gudingData.push(obj);
-          this.allGudingId.push(_id);
-        }
-      }
-    },
-    new_detail () {
-      //明细数据项
-      var _this = this;
-      var ctrlTd = document.querySelectorAll('.ctrlActive');
-      var actieTd = document.querySelector('.isActive');
-      var areaTd = document.querySelectorAll('.area');
-      if (actieTd) {
-        var one = actieTd.getAttribute('fromtr');
-        var two = actieTd.getAttribute('fromtd');
-        var _id = actieTd.getAttribute('id');
-        Vue.set(this.allTds[one][two].class, 'postil', true);
-        var obj = {
-          name: _id,
-          type: "",
-          thelength: '',
-          isonlyOne: false,
-          isEmpty: false,
-          isEdit: false,
-          term: "0",
-          binding: 0,
-          bindingData: [
-            {
-              label: '无',
-              value: 0
-            },
-            {
-              label: 'a',
-              value: 1
-            },
-            {
-              label: 'b',
-              value: 2
-            },
-            {
-              label: 'c',
-              value: 3
-            },
-            {
-              label: 'd',
-              value: 4
-            },
-          ],
-          coordinate: _id
-        };
-        this.mingxiData.push(obj);
-        this.allMingxiId.push(_id);
-      } else if (areaTd[0]) {
-        for (var k = 0, length3 = areaTd.length; k < length3; k++) {
-          var one = areaTd[k].getAttribute('fromtr');
-          var two = areaTd[k].getAttribute('fromtd');
-          var _id = areaTd[k].getAttribute('id');
-          Vue.set(_this.allTds[one][two].class, 'postil', true);
-          var obj = {
-            name: _id,
-            type: "",
-            thelength: '',
-            isonlyOne: false,
-            isEmpty: false,
-            isEdit: false,
-            term: "0",
-            binding: 0,
-            bindingData: [
-              {
-                label: '无',
-                value: 0
-              },
-              {
-                label: 'a',
-                value: 1
-              },
-              {
-                label: 'b',
-                value: 2
-              },
-              {
-                label: 'c',
-                value: 3
-              },
-              {
-                label: 'd',
-                value: 4
-              },
-            ],
-            coordinate: _id
-          };
-          this.mingxiData.push(obj);
-          this.allMingxiId.push(_id);
-        }
-      } else if (ctrlTd[0]) {
-        for (var k = 0, length3 = ctrlTd.length; k < length3; k++) {
-          var one = ctrlTd[k].getAttribute('fromtr');
-          var two = ctrlTd[k].getAttribute('fromtd');
-          var _id = ctrlTd[k].getAttribute('id');
-          Vue.set(_this.allTds[one][two].class, 'postil', true);
-          var obj = {
-            name: _id,
-            type: "",
-            thelength: '',
-            isonlyOne: false,
-            isEmpty: false,
-            isEdit: false,
-            term: "0",
-            binding: 0,
-            bindingData: [
-              {
-                label: '无',
-                value: 0
-              },
-              {
-                label: 'a',
-                value: 1
-              },
-              {
-                label: 'b',
-                value: 2
-              },
-              {
-                label: 'c',
-                value: 3
-              },
-              {
-                label: 'd',
-                value: 4
-              },
-            ],
-            coordinate: _id
-          };
-          this.mingxiData.push(obj);
-          this.allMingxiId.push(_id);
-        }
-      }
-    },
-    aa () {
-      console.log(this.gudingData)
-    }
   }
 }
 
